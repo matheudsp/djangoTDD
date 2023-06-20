@@ -1,0 +1,151 @@
+<style>
+    * {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    .form-container {
+        width: 200px;
+        margin: 50px auto;
+        padding: 20px;
+        border-radius: 10px;
+        background-color: #f0f0f0;
+        text-align: center;
+    }
+
+    .form-container h1 {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .form-container label {
+        font-size: 16px;
+        color: #555;
+    }
+
+    .form-container input[type="text"],
+    .form-container textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    .form-container input[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        background-color: #4caf50;
+        color: #fff;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .table-container {
+        width: 1000px;
+        margin: 40px auto;
+        border-radius: 10px;
+        background-color: #f0f0f0;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .table-container h2 {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .table-container table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    .table-container th {
+        background-color: #f1f1f1;
+        padding: 12px;
+        text-align: left;
+        color: #333;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 14px;
+        border-bottom: 2px solid #ccc;
+    }
+
+    .table-container td {
+        padding: 12px;
+        border-bottom: 1px solid #f1f1f1;
+    }
+
+    .table-container .empty-message {
+        color: #888;
+        font-style: italic;
+    }
+
+    .table-container .table-row:nth-child(odd) {
+        background-color: #f9f9f9;
+    }
+
+    .table-container .table-row:nth-child(even) {
+        background-color: #ffffff;
+    }
+
+    .table-container .table-row:hover {
+        background-color: #f2f2f2;
+    }
+
+    .table-container .delete-button {
+        padding: 5px 10px;
+        border-radius: 5px;
+        background-color: #e74c3c;
+        color: #fff;
+        font-size: 14px;
+        border: none;
+        cursor: pointer;
+    }
+</style>
+
+<div class="form-container">
+    <h1>Criar tarefa</h1>
+    <form method="post" action="{% url 'criar_tarefa' %}">
+        {% csrf_token %}
+        <label for="titulo">Nome</label><br>
+        <input type="text" name="titulo" value=""><br><br>
+        <label for="texto">Descrição</label><br>
+        <textarea name="texto"></textarea><br><br>
+        <input type="submit" value="Criar">
+    </form>
+</div>
+
+<div class="table-container">
+    <h2>Tarefas criadas</h2>
+    {% if tarefas %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tarefa in tarefas %}
+                    <tr class="table-row">
+                        <td>{{ tarefa.titulo }}</td>
+                        <td>{{ tarefa.texto }}</td>
+                        <td>
+                            <form method="post" action="{% url 'excluir_tarefa' tarefa.id %}">
+                                {% csrf_token %}
+                                <input class="delete-button" type="submit" value="Excluir">
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="empty-message">Nenhuma tarefa encontrada.</p>
+    {% endif %}
+</div>
